@@ -4,6 +4,11 @@ languageCode: "en-us"
 title: "Camunda 7 documentation"
 theme: "camunda"
 
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+
 blackfriday:
   plainIDAnchors: true
 
@@ -71,5 +76,4 @@ outputs:
 
 disableKinds:
 - taxonomy
-- taxonomyTerm
 ...
