@@ -45,9 +45,9 @@ Note that you do not need to install the Process Engine if you do not want to ex
 
 # Download
 
-Get the latest release from the [Fluxnova Modeler download page](https://fluxnova.com/download/modeler/).
+Get the latest release from the [Fluxnova Modeler GitHub releases](https://github.com/finos/fluxnova-modeler/releases/latest).
 
-Find older versions of the modeler in our [release archive](https://downloads.fluxnova.cloud/release/fluxnova-modeler/).
+Find all available versions on the [releases page](https://github.com/finos/fluxnova-modeler/releases).
 
 # Install
 
