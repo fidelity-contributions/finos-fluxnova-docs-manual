@@ -57,7 +57,7 @@ See the [Installation Guide][installation-guide-full] for additional details.
 # Download Fluxnova Modeler
 
 Fluxnova Modeler is a modeling Tool for BPMN 2.0 and DMN 1.3. Fluxnova Modeler can be downloaded
-from the [community download page][community-download-page].
+from the [GitHub releases](https://github.com/finos/fluxnova-modeler/releases/latest).
 
 
 
