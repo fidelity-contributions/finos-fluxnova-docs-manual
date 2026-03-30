@@ -20,7 +20,7 @@ Throughout this guide we will use a number of variables to denote common path na
 
 * `$TOMCAT_HOME` points to the main directory of the tomcat server.
 * `$TOMCAT_VERSION` denotes the version of Tomcat server.
-* `$PLATFORM_VERSION` denotes the version of Fluxnova you want to install or already have installed, e.g. `7.0.0`.
+* `$PLATFORM_VERSION` denotes the version of Fluxnova you want to install or already have installed, e.g. `1.0.0`.
 * `$TOMCAT_DISTRIBUTION` represents the downloaded pre-packaged Fluxnova distribution for Tomcat, e.g. `fluxnova-bpm-tomcat-$PLATFORM_VERSION.zip` or `fluxnova-bpm-tomcat-$PLATFORM_VERSION.tar.gz`.
 
 {{< /note >}}
@@ -36,8 +36,8 @@ The above workaround is not guaranteed to work for cases with bean references be
 
 The following test scenarios fail on Tomcat 10:
 
-* [CallActivityContextSwitchTest](https://github.com/finos/fluxnova-bpm-platform/blob/f37877b822dabcbf3cee5806bd5833d18cdcb543/qa/integration-tests-engine/src/test/java/org/finos/fluxnova/bpm/integrationtest/functional/context/CallActivityContextSwitchTest.java)
-* [CdiBeanCallActivityResolutionTest](https://github.com/finos/fluxnova-bpm-platform/blob/f37877b822dabcbf3cee5806bd5833d18cdcb543/qa/integration-tests-engine/src/test/java/org/finos/fluxnova/bpm/integrationtest/functional/cdi/CdiBeanCallActivityResolutionTest.java)
+* [CallActivityContextSwitchTest](https://github.com/finos/fluxnova-bpm-platform/blob/main/qa/integration-tests-engine/src/test/java/org/finos/fluxnova/bpm/integrationtest/functional/context/CallActivityContextSwitchTest.java)
+* [CdiBeanCallActivityResolutionTest](https://github.com/finos/fluxnova-bpm-platform/blob/main/qa/integration-tests-engine/src/test/java/org/finos/fluxnova/bpm/integrationtest/functional/cdi/CdiBeanCallActivityResolutionTest.java)
 {{< /note >}}
 
 
@@ -175,7 +175,6 @@ This section describes how to install optional Fluxnova dependencies onto a Tomc
 The following steps are required to deploy the applications:
 
 1. Download the Fluxnova web application that contains both applications from our [Artifact Repository](https://mvnrepository.com/artifact/org.finos.fluxnova.bpm.webapp/fluxnova-webapp-tomcat).
-   Or switch to the private repository for the enterprise version (User and password from license required).
     * For [Tomcat 10](https://mvnrepository.com/artifact/org.finos.fluxnova.bpm.webapp/fluxnova-webapp-tomcat-jakarta), the name of the artifact is `$PLATFORM_VERSION/fluxnova-webapp-tomcat-jakarta-$PLATFORM_VERSION.war`.
 2. Copy the war file to `$TOMCAT_HOME/webapps/fluxnova.war`.
    Optionally you may name it differently or extract it to a folder to deploy it to a different context path.
@@ -188,7 +187,6 @@ The following steps are required to deploy the applications:
 The following steps are required to deploy the REST API:
 
 1. Download the REST API web application archive from our [Artifact Repository](https://mvnrepository.com/artifact/org.finos.fluxnova.bpm/fluxnova-engine-rest).
-    Or switch to the private repository for the enterprise version (User and password from license required).
     * For [Tomcat 10](https://mvnrepository.com/artifact/org.finos.fluxnova.bpm/fluxnova-engine-rest-jakarta/), the name of the artifact is `$PLATFORM_VERSION/fluxnova-engine-rest-jakarta-$PLATFORM_VERSION-tomcat.war`.
 2. Copy the war file to `$TOMCAT_HOME/webapps`.
    Optionally you may rename it or extract it to a folder to deploy it to a specific context like `/engine-rest`.

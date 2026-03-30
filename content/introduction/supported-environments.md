@@ -77,7 +77,7 @@ Clustered or replicated databases are supported given the following conditions. 
 
 # Maintenance Policy
 
-Check our [Enterprise Announcements page](/enterprise/announcement/) for confirmed changes to our supported environments in upcoming releases.
+Check our [Announcements page](https://github.com/finos/fluxnova-bpm-platform/discussions/categories/announcements) for confirmed changes to our supported environments in upcoming releases.
 
 ## Adding Environments
 

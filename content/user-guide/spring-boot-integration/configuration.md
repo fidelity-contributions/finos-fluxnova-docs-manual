@@ -884,7 +884,7 @@ The method of configuration described above does not cover all process engine pr
 property that is not exposed (i.e. listed above) you can use generic-properties.
 
 ```yaml
-floxnova:
+fluxnova:
   bpm:
     generic-properties:
       properties:

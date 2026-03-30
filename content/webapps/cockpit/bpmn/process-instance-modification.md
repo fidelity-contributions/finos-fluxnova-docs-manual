@@ -14,10 +14,6 @@ menu:
 ---
 
 
-{{< enterprise >}}
-Please note that this feature is only included in the enterprise edition of Fluxnova, it is not available in the community edition.
-{{< /enterprise >}}
-
 {{< img outdated="true" src="../../img/cockpit-modification.png" title="Process Instance Modification" >}}
 
 In the detail view, you can modify the process instance's execution state. A modification can be one or multiple of the following operations:
