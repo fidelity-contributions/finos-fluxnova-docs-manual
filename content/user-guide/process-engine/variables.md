@@ -88,6 +88,57 @@ If the same caller attempts to update `creditScore`, the engine rejects the oper
 
 See [Authorization Service]({{< ref "/user-guide/process-engine/authorization-service.md" >}}) for permission modeling details and [Variables in the REST API]({{< ref "/reference/rest/overview/variables.md" >}}) for endpoint-specific behavior.
 
+## Setting restricted variables
+
+Restricted variables are set like regular variables, but with `VariableOptions` where `restricted=true`.
+
+### VariableOptions
+
+The `VariableOptions` class encapsulates configuration for variable creation. It supports four options:
+
+* `isTransient`: If `true`, the variable exists only in memory during the current transaction and is not persisted to the database.
+* `restricted`: If `true`, the variable is marked as restricted and subject to authorization checks.
+* `skipJavaSerializationFormatCheck`: If `true`, bypasses validation of the Java serialization format when storing object values.
+* `failIfNotExists`: If `true` (default), throws an exception if the variable does not exist when updating. If `false`, creates the variable if it does not exist.
+
+Use the static factory methods to construct options: `VariableOptions.options(isTransient, restricted)` or `VariableOptions.options(isTransient, restricted, skipJavaSerializationFormatCheck)` to include all parameters.
+
+### Example 1: Set a restricted `string` value
+
+```java
+VariableOptions options = VariableOptions.options(false, true);
+execution.setVariable("customerSegment", "gold", options);
+```
+
+### Example 2: Set a restricted `number` value
+
+```java
+VariableOptions options = VariableOptions.options(false, true);
+execution.setVariable("creditScore", 720, options);
+```
+
+### Example 3: Set a restricted variable via `RuntimeService`
+
+Use the Typed Value API with `RuntimeService`:
+
+```java
+TypedValue restrictedValue = Variables.stringValue("secret", VariableOptions.options(false, true));
+runtimeService.setVariable(processInstanceId, "restrictedVar", restrictedValue);
+```
+
+You can also set a restricted number value in the same way:
+
+```java
+TypedValue restrictedValue = Variables.numberValue(720, VariableOptions.options(false, true));
+runtimeService.setVariable(processInstanceId, "creditScore", restrictedValue);
+```
+
+Alternatively, you can set an untyped restricted variable directly with `VariableOptions`:
+
+```java
+runtimeService.setVariable(processInstanceId, "creditScore", 720, VariableOptions.options(false, true));
+```
+
 
 # Set and Retrieve Variables - Overview
 
