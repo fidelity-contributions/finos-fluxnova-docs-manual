@@ -14,7 +14,7 @@ menu:
 
 
 Try BPMN workflows directly in your browser without any setup.
-Download Fluxnova Engine from [Fluxnova Initializer](/get-started/spring-boot/initializer) in the [Spring Boot Docs](/get-started/spring-boot).
+Download Fluxnova Engine from [Fluxnova Initializer]({{< relref "/get-started/spring-boot/initializer.md" >}}) in the [Spring Boot Docs]({{< relref "/get-started/spring-boot/_index.md" >}}).
 
 ---
 
