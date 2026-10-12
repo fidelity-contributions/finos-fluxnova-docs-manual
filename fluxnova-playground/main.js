@@ -454,7 +454,7 @@ if (outputEl) {
 if (startJson.ended === true) {
   finalOutput += ", process ended successfully";
 } else {
-  finalOutput += ", view process on Fluxnova monitoring.";
+  finalOutput += ", view process in Fluxnova Monitoring.";
 }
 
 
@@ -467,7 +467,7 @@ if (outputEl) {
     ${startJson.ended
       ? `<span class="status-end"> and ended successfully.</span>`
       : `, <a href="#" class="status-link" onclick="openCockpit()">
-             View process on Fluxnova Monitoring
+             View process in Fluxnova Monitoring
            </a>`
     }
   `;
@@ -548,7 +548,7 @@ if (!hasRunExecuted) {
     if (outputEl) {
       outputEl.innerHTML = `
         <div class="output error">
-          <h5><strong>CANNOT OPEN FlUXNOVA MONITORING</strong></h5>
+          <h5><strong>CANNOT OPEN FLUXNOVA MONITORING</strong></h5>
           <h7>Please click <strong>Run</strong> before opening Fluxnova Monitoring.</h7>
         </div>`;
         scrollToTab("Tab1");
@@ -567,7 +567,7 @@ if (hasLintingErrors) {
       
  outputEl.innerHTML = `
     <div class="output error">
-      <h5><strong>CANNOT OPEN FlUXNOVA MONITORING</strong></h5>
+      <h5><strong>CANNOT OPEN FLUXNOVA MONITORING</strong></h5>
       <h7>
         Please resolve the existing <strong>ERRORS</strong> in the Problems tab and try again.
       </h7>
@@ -583,7 +583,9 @@ if (hasLintingErrors) {
 
   const obj=temp.deployedProcessDefinitions;
   const firstKey = Object.keys(obj)[0];
-  window.cockpitUrl = `https://demo.fluxnova.finos.org/default/process-definitions/${firstKey}`;
+  // firstKey is the deployed process definition id, which the Monitoring
+  // app can deep-link to directly via its process-definition route.
+  window.cockpitUrl = `https://demo.fluxnova.finos.org/fluxnova-monitoring/app/monitoring/default/#/process-definition/${firstKey}`;
   if (!window.cockpitUrl) {
     console.error("cockpitUrl not defined");
     return;
@@ -703,65 +705,264 @@ window.addEventListener("DOMContentLoaded", () => {
   window.initSamples();
 });
 
+/* ==========================================================================
+   Guided Tour
+   ========================================================================== */
 let stepIndex = 0;
 
 const guideSteps = [
   {
-    element: ".uploadbpmn",
-    text: "Click here to upload your BPMN file."
-  },
-  {
-    element: "#canvas",
-    text: "Your diagram will appear here."
+    element: "#sampleDropdown",
+    text: "Select a sample BPMN workflow to load it onto the canvas"
   },
   {
     element: ".dropbtn",
-    text: "Click Run to execute the process."
+    text: "Click here to execute the workflow"
+  },
+  {
+    element: "#cockpitBtn",
+    text: "Open Fluxnova Monitoring to view and work on user tasks created by the running workflow."
+  },
+  {
+    element: "#controlCenterBtn",
+    text: "Open Control Center to track the deployed process definition and its instances in real time."
+  },
+  {
+    element: ".clear",
+    text: "Clear the canvas to reset the workflow"
+  },
+  {
+    element: "#moreActionsBtn",
+    text: "Click here to open more options, where you can upload a BPMN file or view the workflow XML"
+  },
+  {
+    element: "#canvas",
+    text: "This is the canvas where your BPMN workflow is displayed and designed"
+  },
+  {
+    element: ".djs-palette-entries",
+    text: "Use this palette to drag and drop BPMN elements onto the canvas"
+  },
+  {
+    element: ".djs-element",
+    text: "Click on any element in the diagram to select and modify it"
+  },
+  {
+    element: ".djs-minimap",
+    text: "Use the minimap to quickly navigate across large diagrams"
+  },
+  {
+    element: "#properties",
+    text: "This panel lets you view and edit properties of the selected element"
+  },
+  {
+    element: "#defaultOpen",
+    text: "This is the Output tab where execution results are displayed"
+  },
+  {
+    element: "button[onclick*='Tab2']",
+    text: "Switch to the Problems tab to view errors or issues in the workflow"
   }
 ];
 
 function startGuide() {
   document.getElementById("overlay").style.display = "block";
   document.getElementById("guideBox").style.display = "block";
+
   showStep();
 }
 
 function showStep() {
   const step = guideSteps[stepIndex];
   const el = document.querySelector(step.element);
-  const box = document.getElementById("guideBox");
 
-  // remove old highlight
-  document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
+  if (!el) {
+    console.warn("Guide step target not found, skipping:", step.element);
 
-  // highlight current element
+    // Skip steps whose target isn't rendered (e.g. optional/disabled features)
+    // instead of leaving the tour stuck on stale content.
+    if (stepIndex < guideSteps.length - 1) {
+      stepIndex++;
+      showStep();
+    } else {
+      window.skipGuide();
+    }
+    return;
+  }
+
+  if (el.matches(".djs-element")) {
+    const palette = document.querySelector(".djs-palette-entries");
+
+    if (palette) {
+      palette.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  } else {
+    el.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+  document.querySelectorAll(".highlight")
+    .forEach(e => e.classList.remove("highlight"));
+
   el.classList.add("highlight");
 
-  // position box
   const rect = el.getBoundingClientRect();
-  box.style.top = rect.bottom + 10 + "px";
-  box.style.left = rect.left + "px";
+  const appRect = document.querySelector(".app").getBoundingClientRect();
+
+  const box = document.getElementById("guideBox");
+
+  if (el.matches(".djs-element")) {
+    box.style.top = "215px";
+    box.style.left = "179px";
+  } else {
+    box.style.top = (rect.bottom - appRect.top + 10) + "px";
+    box.style.left = (rect.left - appRect.left) + "px";
+  }
 
   document.getElementById("guideText").innerText = step.text;
-  
-
-
-  // scrollToTab("guideBox");
 }
 
-function nextStep() {
+window.startGuide = function () {
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("guideBox").style.display = "block";
+
+  stepIndex = 0; // reset in case user restarts
+  showStep();
+};
+
+window.nextStep = function () {
   stepIndex++;
 
   if (stepIndex >= guideSteps.length) {
     document.getElementById("overlay").style.display = "none";
     document.getElementById("guideBox").style.display = "none";
-    document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
+
+    document.querySelectorAll(".highlight")
+      .forEach(e => e.classList.remove("highlight"));
+
     return;
   }
 
   showStep();
-}
-
-window.onload = function () {
-  startGuide();   // ✅ ADD THIS LINE
 };
+
+window.skipGuide = function () {
+  document.getElementById("overlay").style.display = "none";
+  document.getElementById("guideBox").style.display = "none";
+
+  document.querySelectorAll(".highlight")
+    .forEach(e => e.classList.remove("highlight"));
+
+  stepIndex = 0;
+};
+
+window.addEventListener("load", () => {
+  setTimeout(startGuide, 500);
+});
+
+/* ==========================================================================
+   More Actions Dropdown
+   ========================================================================== */
+document.addEventListener("DOMContentLoaded", function () {
+  const moreActionsBtn = document.getElementById("moreActionsBtn");
+  const actionsMenu = document.getElementById("actionsMenu");
+
+  if (!moreActionsBtn || !actionsMenu) return;
+
+  function toggleActionsMenu() {
+    actionsMenu.classList.toggle("show");
+  }
+
+  moreActionsBtn.addEventListener("click", function (event) {
+    event.stopPropagation(); // prevent close conflict
+    toggleActionsMenu();
+  });
+
+  // Close when clicking outside
+  window.addEventListener("click", function (event) {
+    if (!event.target.closest(".more-actions")) {
+      actionsMenu.classList.remove("show");
+    }
+  });
+});
+
+/* ==========================================================================
+   Process Variables Dialog Submission
+   ========================================================================== */
+window.submitPopup = function () {
+  const inputBox = document.getElementById("inputBox");
+  const inputError = document.getElementById("inputError");
+  const value = inputBox.value.trim();
+
+  if (!value) {
+    inputError.textContent = "Enter {} if no input variables are needed.";
+    inputBox.setAttribute("aria-invalid", "true");
+    inputBox.focus();
+    return;
+  }
+
+  let variables;
+  try {
+    variables = JSON.parse(value);
+  } catch {
+    inputError.textContent = "Enter valid JSON, or {} if no input variables are needed.";
+    inputBox.setAttribute("aria-invalid", "true");
+    inputBox.focus();
+    return;
+  }
+
+  if (!variables || typeof variables !== "object" || Array.isArray(variables)) {
+    inputError.textContent = "Input must be a JSON object, such as {}.";
+    inputBox.setAttribute("aria-invalid", "true");
+    inputBox.focus();
+    return;
+  }
+
+  inputError.textContent = "";
+  inputBox.removeAttribute("aria-invalid");
+  document.getElementById("myDialog").close();
+  window.runProcess(variables);
+  window.scrollToTab("Tab1");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  const inputBox = document.getElementById("inputBox");
+  const inputError = document.getElementById("inputError");
+  if (!inputBox || !inputError) return;
+
+  inputBox.addEventListener("input", () => {
+    inputBox.removeAttribute("aria-invalid");
+    inputError.textContent = "";
+  });
+});
+
+/* ==========================================================================
+   Output / Problems Tab Switching
+   ========================================================================== */
+window.openTab = function (evt, tabName) {
+  // Hide all tab contents
+  const tabcontent = document.getElementsByClassName("tabcontent");
+  for (let i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+
+  // Remove 'active' class from all buttons
+  const tablinks = document.getElementsByClassName("tablinks");
+  for (let i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+
+  // Show the selected tab and mark the button as active
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.className += " active";
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Open the default tab on page load
+  document.getElementById("defaultOpen")?.click();
+});
